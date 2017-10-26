@@ -3,12 +3,11 @@ import csv
 import os
 import sys
 import argparse
-import ipaddress
 from netaddr import IPNetwork, IPAddress
 
 CIDRLIST = set()
 
-CIDRLIST = {'IPLIST'}
+CIDRLIST = {'0.0.0.0/0'}
 
 
 def nfdumpToCSV(INFILE, OUTFILE, IPvTYPE):
@@ -17,8 +16,8 @@ def nfdumpToCSV(INFILE, OUTFILE, IPvTYPE):
             ' -o "fmt:%da,%dp" > ' + OUTFILE.name + '.RAW'
         os.system(command)
     elif (IPvTYPE == '4'):
-        command = 'nfdump -r ' + INFILE.name + \
-            ' -o "fmt:%da,%dp" > ' + OUTFILE.name + '.RAW'
+        command = 'nfdump -r  ' + INFILE.name + \
+            ' -q -o "fmt:%da,%dp" > ' + OUTFILE.name + '.RAW'
         os.system(command)
 
     cleanCSV(OUTFILE)
@@ -29,19 +28,25 @@ def cleanCSV(OUTFILE):
         writer = csv.writer(out)
 
         for row in csv.reader(inp, delimiter=','):
-            row[0] = row[0].strip()
+            ip = row[0].strip()
 
-            try:
-                # check for valid IP address
-                ipaddress.ip_address(row[0])
-                row[1] = row[1].strip()
+            portnr = row[1].strip()
                 # check if portnumber is lower than 1024
-                if 0 < float(row[1]) <= 1024:
-                    for CIDR in CIDRLIST:
-                        if IPAddress(row[0]) in IPNetwork(CIDR):
-                            writer.writerow(row)
-            except:
-                pass
+            if 0 < float(portnr) <= 1024:
+                a, b, c, d= ip.split('.')
+
+                # if a in a
+                    # then if a as key and b in b
+                        # then if a s key and b as value in c = c
+                print(a +"."+  b +"."+ c +"."+ d)
+                ifchecker(a,b,c)
+                    writer.writerow(row)
+
+
+                    #for CIDR in CIDRLIST:
+                    #    if IPAddress(row[0]) in IPNetwork(CIDR):
+                    #        writer.writerow(row)
+
     os.remove(OUTFILE.name + '.RAW')
 
 
