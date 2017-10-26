@@ -4,14 +4,8 @@ import csv
 import os
 import sys
 import argparse
-from netaddr import IPNetwork, IPAddress
 
-CIDRLIST = set()
-
-CIDRLIST = {'0.0.0.0/0'}
-
-
-def nfdumpToCSV(INFILE, OUTFILE, IPvTYPE):
+def nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE):
     if (IPvTYPE == '6'):
         command = 'nfdump -6 -r ' + INFILE.name + \
             ' -o "fmt:%da,%dp" > ' + OUTFILE.name + '.RAW'
@@ -21,7 +15,7 @@ def nfdumpToCSV(INFILE, OUTFILE, IPvTYPE):
             ' -q -o "fmt:%da,%dp" > ' + OUTFILE.name + '.RAW'
         os.system(command)
 
-    cleanCSV(OUTFILE)
+    cleanCSV(IPRANGETREE, OUTFILE)
 
 def ownerChecker(ranges, block1, block2, block3):
     try:
@@ -30,12 +24,14 @@ def ownerChecker(ranges, block1, block2, block3):
     except:
         return False
 
-def cleanCSV(OUTFILE):
+def cleanCSV(IPRANGETREE, OUTFILE):
     with open(OUTFILE.name + '.RAW', 'r') as inp, open(OUTFILE.name, 'w') as out:
         writer = csv.writer(out)
 
-        with open(IPRANGETREE, 'r') as f:
-            ranges = ast.literal_eval(f.read)
+        reader = {}
+        with open(IPRANGETREE.name, 'r') as f:
+            reader =f.read()
+            ranges = ast.literal_eval(reader)
 
             for row in csv.reader(inp, delimiter=','):
                 ip = row[0].strip()
@@ -45,7 +41,7 @@ def cleanCSV(OUTFILE):
                 if 0 < float(portnr) <= 1024:
                     a, b, c, d = ip.split('.')
 
-                    if ownerChecker(ranges, a, b, c)
+                    if ownerChecker(ranges, a, b, c):
                         writer.writerow(row)
 
     os.remove(OUTFILE.name + '.RAW')
@@ -59,6 +55,8 @@ def main(arguments):
                         type=argparse.FileType('r'))
     parser.add_argument('outfile', help="Output file",
                         type=argparse.FileType('w'))
+    parser.add_argument('rangetree', help="Range tree with addresses",
+                        type=argparse.FileType('r'))
     parser.add_argument(
         'ipv', choices=['4', '6'], help='for IPv6 "6" for IPv4 "4"')
 
@@ -66,8 +64,9 @@ def main(arguments):
     INFILE = args.infile
     OUTFILE = args.outfile
     IPvTYPE = args.ipv
+    IPRANGETREE = args.rangetree
 
-    nfdumpToCSV(INFILE, OUTFILE, IPvTYPE)
+    nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE)
 
 
 if __name__ == '__main__':
