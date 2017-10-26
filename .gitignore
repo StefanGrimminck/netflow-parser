@@ -40,3 +40,11 @@ Thumbs.db
 ######################
 *.csv
 *.json
+
+*.xml
+
+\.idea/
+
+ipv4-nfcapd\.201710131445
+
+ipv6-nfcapd\.201710131445
