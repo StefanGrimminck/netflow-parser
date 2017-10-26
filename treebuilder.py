@@ -1,1 +1,9 @@
-#https://stackoverflow.com/questions/16547643/convert-a-list-of-delimited-strings-to-a-tree-nested-dict-using-python
+ls = ['one.two.three.four', 'one.six.seven.eight', 'five.nine.ten', 'twelve.zero']
+tree = {}
+
+for item in ls:
+    t = tree
+    for part in item.split('.'):
+        t = t.setdefault(part, {})
+
+print(tree)
