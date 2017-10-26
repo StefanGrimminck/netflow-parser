@@ -1,9 +1,14 @@
-ls = ['one.two.three.four', 'one.six.seven.eight', 'five.nine.ten', 'twelve.zero']
+import csv
+
+with open('file', 'r') as f:
+    reader = csv.reader(f)
+    ls = list(reader)
+
 tree = {}
 
 for item in ls:
     t = tree
-    for part in item.split('.'):
+    for part in item[0].split('.'):
         t = t.setdefault(part, {})
 
 print(tree)
