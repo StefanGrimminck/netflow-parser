@@ -25,6 +25,8 @@ def ownerChecker(ranges, block1, block2, block3):
         return False
 
 def cleanCSV(IPRANGETREE, OUTFILE):
+    rows = []
+
     with open(OUTFILE.name + '.RAW', 'r') as inp, open(OUTFILE.name, 'w') as out:
         writer = csv.writer(out)
 
@@ -42,7 +44,9 @@ def cleanCSV(IPRANGETREE, OUTFILE):
                     a, b, c, d = ip.split('.')
 
                     if ownerChecker(ranges, a, b, c):
-                        writer.writerow(row)
+                        if row not in rows:
+                            rows.append(row)
+                            writer.writerow(row)
 
     os.remove(OUTFILE.name + '.RAW')
 
