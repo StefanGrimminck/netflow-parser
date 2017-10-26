@@ -5,6 +5,7 @@ import os
 import sys
 import argparse
 
+
 def nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE):
     if (IPvTYPE == '6'):
         command = 'nfdump -6 -r ' + INFILE.name + \
@@ -17,12 +18,14 @@ def nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE):
 
     cleanCSV(IPRANGETREE, OUTFILE)
 
+
 def ownerChecker(ranges, block1, block2, block3):
     try:
         if (block3 in ranges[block1][block2]):
             return True
     except:
         return False
+
 
 def cleanCSV(IPRANGETREE, OUTFILE):
     rows = []
@@ -32,7 +35,7 @@ def cleanCSV(IPRANGETREE, OUTFILE):
 
         reader = {}
         with open(IPRANGETREE.name, 'r') as f:
-            reader =f.read()
+            reader = f.read()
             ranges = ast.literal_eval(reader)
 
             for row in csv.reader(inp, delimiter=','):
