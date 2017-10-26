@@ -30,16 +30,16 @@ def cleanCSV(IPRANGETREE, OUTFILE):
 
         reader = {}
         with open(IPRANGETREE.name, 'r') as f:
-            reader =f.read()
+            reader = f.read()
             ranges = ast.literal_eval(reader)
 
             for row in csv.reader(inp, delimiter=','):
-                ip = row[0].strip()
+                row[0] = row[0].strip()
 
-                portnr = row[1].strip()
+                row[1] = row[1].strip()
                 # check if portnumber is lower than 1024
-                if 0 < float(portnr) <= 1024:
-                    a, b, c, d = ip.split('.')
+                if 0 < float(row[1]) <= 1024:
+                    a, b, c, d = row[0].split('.')
 
                     if ownerChecker(ranges, a, b, c):
                         writer.writerow(row)
