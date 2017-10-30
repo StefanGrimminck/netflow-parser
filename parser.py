@@ -7,7 +7,7 @@ import argparse
 import ipaddress
 
 
-def nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE):
+def nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE, IPV6RNG):
     if (IPvTYPE == '6'):
         command = 'nfdump -6 -r ' + INFILE.name + \
             ' -q -o "fmt:%da,%dp" > ' + OUTFILE.name + '.RAW'
@@ -17,7 +17,7 @@ def nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE):
             ' -q -o "fmt:%da,%dp" > ' + OUTFILE.name + '.RAW'
         os.system(command)
 
-    cleanCSV(IPRANGETREE, OUTFILE, IPvTYPE)
+    cleanCSV(IPRANGETREE, OUTFILE, IPvTYPE, IPV6RNG)
 
 
 def ownerChecker(ranges, block1, block2, block3):
@@ -29,7 +29,7 @@ def ownerChecker(ranges, block1, block2, block3):
 
 
 
-def cleanCSV(IPRANGETREE, OUTFILE, IPvTYPE):
+def cleanCSV(IPRANGETREE, OUTFILE, IPvTYPE, IPV6RNG):
     with open(OUTFILE.name + '.RAW', 'r') as inp, open(OUTFILE.name, 'w') as out:
         writer = csv.writer(out)
 
@@ -56,7 +56,7 @@ def cleanCSV(IPRANGETREE, OUTFILE, IPvTYPE):
                 row[1] = row[1].strip()
                 # check if portnumber is lower than 1024
                 if 0 < float(row[1]) <= 1024:
-                    if ipaddress.ip_address(row[0]) in ipaddress.ip_network('IPRANGE'):
+                    if ipaddress.ip_address(row[0]) in ipaddress.ip_network(IPV6RNG):
                         writer.writerow(row)
 
 
@@ -74,6 +74,7 @@ def main(arguments):
                         type=argparse.FileType('w'))
     parser.add_argument('--rangetree', help="Range tree with addresses",
                         type=argparse.FileType('r'))
+    parser.add_argument('--ipv6range', help="IPv6 range")
     parser.add_argument(
         'ipv', choices=['4', '6'], help='for IPv6 "6" for IPv4 "4"')
 
@@ -82,8 +83,9 @@ def main(arguments):
     OUTFILE = args.outfile
     IPvTYPE = args.ipv
     IPRANGETREE = args.rangetree
+    IPV6RNG = args.ipv6range
 
-    nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE)
+    nfdumpToCSV(IPRANGETREE, INFILE, OUTFILE, IPvTYPE, IPV6RNG)
 
 
 if __name__ == '__main__':
