@@ -38,6 +38,9 @@ Thumbs.db
 
 # Sensitive data #
 ######################
+*
+!*/
+!*.*
 *.csv
 *.json
 *.RAW
