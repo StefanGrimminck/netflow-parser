@@ -40,6 +40,8 @@ Thumbs.db
 ######################
 *.csv
 *.json
+*.RAW
+
 
 *.xml
 
