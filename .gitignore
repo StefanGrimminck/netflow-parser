@@ -44,12 +44,12 @@ Thumbs.db
 *.csv
 *.json
 *.RAW
-
-
 *.xml
+
+ipv4-nfcapd*
+
+ipv6-nfcapd*
 
 \.idea/
 
-ipv4-nfcapd\.201710131445
 
-ipv6-nfcapd\.201710131445
