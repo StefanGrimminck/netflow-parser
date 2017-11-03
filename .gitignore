@@ -46,10 +46,8 @@ Thumbs.db
 *.RAW
 *.xml
 
+# Custom #
+######################
 ipv4-nfcapd*
-
 ipv6-nfcapd*
-
 \.idea/
-
-
