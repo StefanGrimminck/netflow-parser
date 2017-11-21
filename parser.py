@@ -34,14 +34,19 @@ def cleancsv4(rangetree, inputfile, outputfile):
             row[0] = row[0].strip()
             row[1] = row[1].strip()
 
-            if 0 < float(row[1]) <= 1024:
-                a, b, c, d = row[0].split('.')
+            try:
+                if 0 < float(row[1]) <= 1024:
+                    a, b, c, d = row[0].split('.')
 
-                if ownerchecker(ranges, a, b, c):
-                    rows = []
-                    if row not in rows:
-                        rows.append(row)
-                        writer.writerow(row)
+                    if ownerchecker(ranges, a, b, c):
+                        rows = []
+
+                        if row not in rows:
+                            rows.append(row)
+                            writer.writerow(row)
+            except:
+                pass
+
 
 
 def cleancsv6(inputfile, outputfile, iprange):
